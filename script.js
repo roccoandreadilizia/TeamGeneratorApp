@@ -1,39 +1,3 @@
-@ -0,0 +1,66 @@
-const sportSelect = document.getElementById('sport');
-const startBtn = document.getElementById('start');
-const playerInputsDiv = document.getElementById('player-inputs');
-const createTeamsBtn = document.getElementById('create-teams');
-const teamsDiv = document.getElementById('teams');
-const team1Div = document.getElementById('team1');
-const team2Div = document.getElementById('team2');
-
-let numPlayers = 0;
-
-startBtn.addEventListener('click', () => {
-    let sport = sportSelect.value;
-    numPlayers = sport === "pallavolo" ? 12 : 10;
-	numPlayers = sport === "paddle" ? 4 : 10;
-
-    playerInputsDiv.innerHTML = '';
-    for (let i = 0; i < numPlayers; i++) {
-        playerInputsDiv.innerHTML += `
-            <div>
-                <label>Giocatore ${i + 1}</label>
-                <input type="text" placeholder="Nome" id="name-${i}" required />
-                <input type="number" placeholder="Abilità (1-10)" min="1" max="10" id="skill-${i}" required />
-            </div>
-        `;
-    }
-
-    playerInputsDiv.classList.remove('hidden');
-    createTeamsBtn.classList.remove('hidden');
-    teamsDiv.classList.add('hidden');
-});
-
-createTeamsBtn.addEventListener('click', () => {
-	// Nascondi la sezione dei nomi
-    playerInputsDiv.classList.add('hidden');
-    createTeamsBtn.classList.add('hidden');
 	
     let players = [];
     for (let i = 0; i < numPlayers; i++) {

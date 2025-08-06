@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Team Generator App</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Team Generator</h1>
-  <h2>1. Seleziona uno sport</h2>
-  <select id="sportSelect">
-    <option value="">— Caricamento sport —</option>
-  </select>
+    <div class="container">
+        <h1>Team Generator</h1>
 
-  <h2>2. Inserisci i nomi dei partecipanti</h2>
-  <textarea id="namesInput" rows="6" placeholder="Inserisci un nome per riga..."></textarea>
-  <button id="generateBtn" disabled>Inserisci Giocatori</button>
+        <label for="sport">Scegli uno sport:</label>
+        <select id="sport">
+            <option value="calcio">Calcio a 5 (10 giocatori)</option>
+            <option value="basket">Basket (10 giocatori)</option>
+            <option value="pallavolo">Pallavolo (12 giocatori)</option>
+			<option value="paddle">Paddle (4 giocatori)</option>
+        </select>
 
-  <h2>Squadre generate</h2>
-  <div id="teamsOutput"></div>
+        <button id="start">Inserisci giocatori</button>
 
-  <script src="script.js"></script>
+        <div id="player-inputs" class="hidden"></div>
+
+        <button id="create-teams" class="hidden">Crea Squadre</button>
+
+        <div id="teams" class="hidden">
+            <div class="team" id="team1"><h2>Squadra 1</h2><ul></ul><p class="total"></p></div>
+            <div class="team" id="team2"><h2>Squadra 2</h2><ul></ul><p class="total"></p></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
