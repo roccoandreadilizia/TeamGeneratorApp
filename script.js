@@ -2,34 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const select = document.getElementById('sportSelect');
   const btn = document.getElementById('generateBtn');
 
-  fetch('sports.txt')
-    .then(res => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.text();
+  fetch('sports.txt') // <-- nome del file da cui leggere
+    .then(response => {
+      if (!response.ok) throw new Error('Errore nel caricamento del file');
+      return response.text();
     })
-    .then(text => {
-      const lines = text.trim().split('\n').filter(line => line.includes(':'));
-      if (lines.length === 0) throw new Error('sports.txt vuoto o formato sbagliato');
-      window.sports = lines.map((line, i) => {
-        const [name, num] = line.split(':');
-        return { name: name.trim(), playersPerTeam: parseInt(num.trim(), 10) };
-      });
-      select.innerHTML = '<option value="">— Seleziona sport —</option>';
-      window.sports.forEach((s, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = `${s.name} (${s.playersPerTeam})`;
-        select.append(opt);
-      });
-      solveEnable(btn, select);
-    })
-    .catch(err => {
-      console.error(err);
-      select.innerHTML = `<option value="">Errore nel caricamento: ${err.message}</option>`;
-    });
+    .then(data => {
+      const select = document.getElementById('sportSelect');
+      select.innerHTML = ''; // svuota eventuali opzioni esistenti
 
-  select.addEventListener('change', () => solveEnable(btn, select));
-  btn.addEventListener('click', generateTeams);
+      const lines = data.trim().split('\n');
+      lines.forEach(line => {
+        const [sport, value] = line.split(':');
+        if (sport && value) {
+          const option = document.createElement('option');
+          option.value = value.trim();
+          option.textContent = sport.trim();
+          select.appendChild(option);
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Errore:', error);
+    });
 });
 
 function solveEnable(button, select) {
