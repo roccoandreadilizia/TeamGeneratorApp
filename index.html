@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Team Generator App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <h1>Team Generator</h1>
-
   <h2>1. Seleziona uno sport</h2>
-  <select id="sportSelect"></select>
+  <select id="sportSelect">
+    <option value="">— Caricamento sport —</option>
+  </select>
 
   <h2>2. Inserisci i nomi dei partecipanti</h2>
   <textarea id="namesInput" rows="6" placeholder="Inserisci un nome per riga..."></textarea>
-
-  <button onclick="generateTeams()">Inserisci Giocatori</button>
+  <button id="generateBtn" disabled>Inserisci Giocatori</button>
 
   <h2>Squadre generate</h2>
   <div id="teamsOutput"></div>
