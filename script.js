@@ -1,66 +1,62 @@
-const sportSelect = document.getElementById('sport');
-const startBtn = document.getElementById('start');
-const playerInputsDiv = document.getElementById('player-inputs');
-const createTeamsBtn = document.getElementById('create-teams');
-const teamsDiv = document.getElementById('teams');
-const team1Div = document.getElementById('team1');
-const team2Div = document.getElementById('team2');
+let sports = [];
 
-let numPlayers = 0;
+// Carica sports.txt e popola il menu
+fetch('sports.txt')
+  .then(response => response.text())
+  .then(text => {
+    const lines = text.trim().split('\n');
+    sports = lines.map(line => {
+      const [name, number] = line.split(':');
+      return {
+        name: name.trim(),
+        playersPerTeam: parseInt(number.trim())
+      };
+    });
+    populateSportSelect();
+  })
+  .catch(error => {
+    console.error("Errore nel caricamento del file sports.txt:", error);
+    alert("Impossibile caricare gli sport dal file.");
+  });
 
-startBtn.addEventListener('click', () => {
-    let sport = sportSelect.value;
-    numPlayers = sport === "pallavolo" ? 12 : 10;
-	numPlayers = sport === "paddle" ? 4 : 10;
+function populateSportSelect() {
+  const select = document.getElementById("sportSelect");
+  sports.forEach((sport, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = `${sport.name} (${sport.playersPerTeam} per squadra)`;
+    select.appendChild(option);
+  });
+}
 
-    playerInputsDiv.innerHTML = '';
-    for (let i = 0; i < numPlayers; i++) {
-        playerInputsDiv.innerHTML += `
-            <div>
-                <label>Giocatore ${i + 1}</label>
-                <input type="text" placeholder="Nome" id="name-${i}" required />
-                <input type="number" placeholder="Abilità (1-10)" min="1" max="10" id="skill-${i}" required />
-            </div>
-        `;
-    }
+function generateTeams() {
+  const sportIndex = document.getElementById("sportSelect").value;
+  const playersPerTeam = sports[sportIndex].playersPerTeam;
 
-    playerInputsDiv.classList.remove('hidden');
-    createTeamsBtn.classList.remove('hidden');
-    teamsDiv.classList.add('hidden');
-});
+  const rawNames = document.getElementById("namesInput").value.trim();
+  if (!rawNames) {
+    alert("Inserisci almeno un nome.");
+    return;
+  }
 
-createTeamsBtn.addEventListener('click', () => {
-	// Nascondi la sezione dei nomi
-    playerInputsDiv.classList.add('hidden');
-    createTeamsBtn.classList.add('hidden');
-	
-    let players = [];
-    for (let i = 0; i < numPlayers; i++) {
-        let name = document.getElementById(`name-${i}`).value;
-        let skill = parseInt(document.getElementById(`skill-${i}`).value);
-        if (!name || isNaN(skill) || skill < 1 || skill > 10) {
-            alert('Inserisci tutti i nomi e abilità correttamente.');
-            return;
-        }
-        players.push({ name, skill });
-    }
-    players.sort((a, b) => b.skill - a.skill);
+  const names = rawNames.split('\n').map(n => n.trim()).filter(Boolean);
+  const shuffled = names.sort(() => 0.5 - Math.random());
 
-    let team1 = [], team2 = [], sum1 = 0, sum2 = 0;
+  const teams = [];
+  for (let i = 0; i < shuffled.length; i += playersPerTeam) {
+    teams.push(shuffled.slice(i, i + playersPerTeam));
+  }
 
-    for (let p of players) {
-        if (sum1 <= sum2) {
-            team1.push(p);
-            sum1 += p.skill;
-        } else {
-            team2.push(p);
-            sum2 += p.skill;
-        }
-    }
+  displayTeams(teams);
+}
 
-    team1Div.querySelector('ul').innerHTML = team1.map(p => `<li>${p.name} (abilità: ${p.skill})</li>`).join('');
-    team2Div.querySelector('ul').innerHTML = team2.map(p => `<li>${p.name} (abilità: ${p.skill})</li>`).join('');
-    team1Div.querySelector('.total').textContent = `Totale abilità: ${sum1}`;
-    team2Div.querySelector('.total').textContent = `Totale abilità: ${sum2}`;
-    teamsDiv.classList.remove('hidden');
-});
+function displayTeams(teams) {
+  const output = document.getElementById("teamsOutput");
+  output.innerHTML = "";
+  teams.forEach((team, index) => {
+    const div = document.createElement("div");
+    div.className = "team";
+    div.innerHTML = `<strong>Squadra ${index + 1}</strong><br>${team.join("<br>")}`;
+    output.appendChild(div);
+  });
+}

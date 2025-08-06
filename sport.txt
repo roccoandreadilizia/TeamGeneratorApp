@@ -1,0 +1,4 @@
+Calcio:10
+Basket:12
+Pallavolo:12
+Padel:4
